@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>spring-boot</artifactId>
+        <groupId>com.chenqiguang.springboot</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>spring-boot-swagger</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-parser</artifactId>
+            <version>1.0.25</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.gmaven</groupId>
+            <artifactId>groovy-maven-plugin</artifactId>
+            <version>2.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.sonatype.gossip</groupId>
+                    <artifactId>gossip-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>br.com.six2six</groupId>
+            <artifactId>fixture-factory</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
+    </dependencies>
+    <build>
+        <plugins>
+            <!--合并swagger文档-->
+            <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>groovy-maven-plugin</artifactId>
+                <version>2.0</version>
+                <configuration>
+                    <properties>
+                        <inFile>${project.basedir}/src/main/swagger-spec/all/index.yaml</inFile>
+                        <!--<inFile2>${project.basedir}/src/main/swagger-spec/all/index-full.yml</inFile2>-->
+                        <outFile>${project.basedir}/src/main/swagger-spec/api</outFile>
+                        <!--<outFile2>${project.basedir}/src/main/swagger-spec/api-full</outFile2>-->
+                    </properties>
+                    <source>
+
+                        import io.swagger.models.Swagger
+                        import io.swagger.parser.Swagger20Parser
+                        import io.swagger.parser.SwaggerResolver
+                        import io.swagger.util.Json
+                        import io.swagger.util.Yaml
+
+                        def parser = new Swagger20Parser()
+                        def inFile = properties['inFile']
+                        def swagger = parser.read(inFile, null)
+                        def resolver = new SwaggerResolver(swagger, null, inFile)
+                        resolver.resolve()
+
+                        def outFile = properties['outFile']
+
+                        Json.pretty().writeValue(new File(outFile+'.json'), swagger)
+                        Yaml.pretty().writeValue(new File(outFile+'.yaml'),swagger)
+                    </source>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>io.swagger</groupId>
+                        <artifactId>swagger-parser</artifactId>
+                        <version>1.0.25</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <!--生成服务端代码，包括api和model-->
+            <plugin>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <version>2.2.2</version>
+                <configuration>
+                    <inputSpec>${project.basedir}/src/main/swagger-spec/api.json</inputSpec>
+                    <output>swagger-codegen</output>
+                    <language>spring</language>
+                    <templateDirectory>${project.basedir}/src/main/swagger-templates/spring</templateDirectory>
+                    <invokerPackage>com.chenqiguang.springboot.spec</invokerPackage>
+                    <modelPackage>com.chenqiguang.springboot.spec.model</modelPackage>
+                    <configOptions>
+                        <sourceFolder>src/main/java</sourceFolder>
+                        <basePackage>com.chenqiguang.springboot.spec</basePackage>
+                        <apiPackage>com.chenqiguang.springboot.spec.api</apiPackage>
+                        <interfaceOnly>true</interfaceOnly>
+                        <java8>true</java8>
+                        <dateLibrary>java8</dateLibrary>
+                        <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                        <additional-properties>
+                            jackson=true
+                        </additional-properties>
+                        <import-mappings>Response=import com.chenqiguang.springboot.Response</import-mappings>
+                    </configOptions>
+                    <verbose>true</verbose>
+                </configuration>
+            </plugin>
+            <!--添加生成的source到maven-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.12</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>swagger-codegen/src/main/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

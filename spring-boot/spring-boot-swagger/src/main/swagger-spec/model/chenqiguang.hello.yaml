@@ -1,0 +1,13 @@
+swagger: 2.0
+definitions:
+  Hello:
+    description: Hello 类
+    type: object
+    properties:
+      name:
+        description: 姓名
+        type: string
+      age:
+        description: 年龄
+        type: integer
+        format: int64

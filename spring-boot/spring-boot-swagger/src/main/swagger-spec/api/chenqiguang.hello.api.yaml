@@ -1,0 +1,28 @@
+swagger: 2.0
+paths:
+  getHello:
+    post:
+      summary: hello
+      description: hello
+      operationId: getHello
+      parameters:
+        - name: money
+          in: query
+          description: 金钱
+          required: true
+          type: string
+        - name: hello
+          in: body
+          description: hello
+          required: true
+          schema:
+            type: object
+            $ref: '../model/chenqiguang.hello.yaml#/definitions/Hello'
+      responses:
+        '200':
+          description: 统一返回
+          schema:
+            $ref: '../model/common.yaml#/definitions/Response'
+      tags:
+        - helloSwaggerCodegen
+

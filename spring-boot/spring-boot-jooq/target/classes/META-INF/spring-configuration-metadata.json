@@ -1,0 +1,22 @@
+{
+  "groups": [
+    {
+      "name": "chenqiguang.jooq",
+      "type": "com.chenqiguang.springboot.configuration.JooqSettings",
+      "sourceType": "com.chenqiguang.springboot.configuration.JooqSettings"
+    },
+    {
+      "name": "spring.datasource",
+      "type": "javax.sql.DataSource",
+      "sourceType": "com.chenqiguang.springboot.configuration.DataSourceConfiguration",
+      "sourceMethod": "dataSource()"
+    }
+  ],
+  "properties": [{
+    "name": "chenqiguang.jooq.max-select-rows",
+    "type": "java.lang.Integer",
+    "sourceType": "com.chenqiguang.springboot.configuration.JooqSettings",
+    "defaultValue": 50000
+  }],
+  "hints": []
+}

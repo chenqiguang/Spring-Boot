@@ -1,0 +1,30 @@
+swagger: 2.0
+info:
+  title: Xforce+ athena API
+  description: Xforce+ athena API 3.0
+  version: 1.0
+host: 127.0.0.1:8080
+#basePath: "/api-v1"
+schemes:
+  - http
+  - https
+securityDefinitions:
+  X-Access-Token:
+    type: apiKey
+    name: X-Access-Token
+    in: header
+  X-Operation-Token:
+    type: apiKey
+    name: X-Operation-Token
+    in: header
+security:
+  - X-Access-Token: []
+  - X-Operation-Token: []
+tags:
+  - name: helloSwaggerCodegen
+    description: swaggerCodegen hello
+produces:
+  - application/json
+paths:
+  /Hello/getHello:
+    $ref: '../api/chenqiguang.hello.api.yaml#/paths/getHello'

@@ -1,0 +1,30 @@
+package {{package}};
+
+{{^supportJava6}}
+import java.util.Objects;
+{{/supportJava6}}
+{{#supportJava6}}
+import org.apache.commons.lang3.ObjectUtils;
+{{/supportJava6}}
+{{#imports}}
+import {{import}};
+{{/imports}}
+import com.fasterxml.jackson.annotation.JsonInclude;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+{{#serializableModel}}
+import java.io.Serializable;
+{{/serializableModel}}
+{{#parcelableModel}}
+import android.os.Parcelable;
+import android.os.Parcel;
+{{/parcelableModel}}
+{{#useBeanValidation}}
+import javax.validation.constraints.*;
+{{/useBeanValidation}}
+
+{{#models}}
+{{#model}}
+{{#isEnum}}{{>modelEnum}}{{/isEnum}}{{^isEnum}}{{>pojo}}{{/isEnum}}
+{{/model}}
+{{/models}}

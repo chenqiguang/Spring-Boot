@@ -1,0 +1,79 @@
+---
+swagger: "2.0"
+info:
+  description: "Xforce+ athena API 3.0"
+  version: "1.0"
+  title: "Xforce+ athena API"
+host: "127.0.0.1:8080"
+tags:
+- name: "helloSwaggerCodegen"
+  description: "swaggerCodegen hello"
+schemes:
+- "http"
+- "https"
+produces:
+- "application/json"
+security:
+- X-Access-Token: []
+- X-Operation-Token: []
+paths:
+  /Hello/getHello:
+    post:
+      tags:
+      - "helloSwaggerCodegen"
+      summary: "hello"
+      description: "hello"
+      operationId: "getHello"
+      parameters:
+      - name: "money"
+        in: "query"
+        description: "金钱"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "hello"
+        description: "hello"
+        required: true
+        schema:
+          $ref: "#/definitions/Hello"
+      responses:
+        200:
+          description: "统一返回"
+          schema:
+            $ref: "#/definitions/Response"
+securityDefinitions:
+  X-Access-Token:
+    type: "apiKey"
+    name: "X-Access-Token"
+    in: "header"
+  X-Operation-Token:
+    type: "apiKey"
+    name: "X-Operation-Token"
+    in: "header"
+definitions:
+  Hello:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "姓名"
+      age:
+        type: "integer"
+        format: "int64"
+        description: "年龄"
+    description: "Hello 类"
+  Response:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+        description: "return code"
+      message:
+        type: "string"
+        description: "return message"
+      result:
+        type: "object"
+        description: "result\n"
+        properties: {}
+    description: "general Response object"

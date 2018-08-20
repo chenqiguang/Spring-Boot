@@ -1,0 +1,17 @@
+swagger: 2.0
+definitions:
+  Response:
+    description: general Response object
+    type: object
+    properties:
+      code:
+        description: return code
+        type: integer
+        format: int32
+      message:
+        description: return message
+        type: string
+      result:
+        description: |
+          result
+        type: object
